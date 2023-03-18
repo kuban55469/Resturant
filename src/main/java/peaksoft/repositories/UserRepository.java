@@ -3,6 +3,7 @@ package peaksoft.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import peaksoft.dto.responses.ChefResponse;
+import peaksoft.dto.responses.StatementResponse;
 import peaksoft.dto.responses.WaiterResponse;
 import peaksoft.entity.User;
 import peaksoft.enums.Role;
@@ -36,4 +37,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
            " u.firstName, u.lastName, u.dateOfBrith, u.email," +
            " u.phoneNumber, u.experience) from User u where u.id=?1 and u.role = ?2")
     Optional<WaiterResponse> findByWaiterId(Long waiterId, Role role);
+
+
+    @Query("select new peaksoft.dto.responses.StatementResponse(u.id, u.firstName, u.lastName," +
+           "u.dateOfBrith, u.email, u.phoneNumber,u.role, u.experience) from User u where u.restaurant.id=null")
+    List<StatementResponse> findAllNewEmployees();
+
 }

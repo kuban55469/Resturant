@@ -13,7 +13,7 @@ import java.util.List;
 public interface SubCategoryService {
     SimpleResponse save(Long categoryId, SubCategoryRequest subCategoryRequest);
 
-    List<SubCategoryResponse> findAll(Long categoryId);
+    List<SubCategoryResponse> findAllByCategory(Long categoryId);
 
     SubCategoryResponse getById(Long subId);
 

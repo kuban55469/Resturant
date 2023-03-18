@@ -18,6 +18,7 @@ import java.time.Period;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -51,8 +52,18 @@ public class ChefServiceImpl implements ChefService {
         user.setRole(Role.CHEF);
         user.setPassword(passwordEncoder.encode(cook.password()));
 
+
         int count = restaurant.getUsers().size();
-        restaurant.setNumberOfEmployees(count);
+        if (count > 14){
+            return SimpleResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("Sorry we haven't run out of vacancies").build();
+        }else {
+            restaurant.setNumberOfEmployees(++count);
+            restaurantRepository.save(restaurant);
+        }
+
+
 
         LocalDate now = LocalDate.now();
         int age = Period.between(cook.dateOfBrith(), now).getYears();
@@ -145,6 +156,14 @@ public class ChefServiceImpl implements ChefService {
 
         restaurant.getUsers().removeIf(chef ->chef.getId().equals(chefId));
 
+        int count = restaurant.getUsers().size();
+        if (count == 0){
+            return SimpleResponse.builder()
+                    .status(BAD_REQUEST)
+                    .message("We have no employees").build();
+        }
+        restaurant.setNumberOfEmployees(count--);
+        restaurantRepository.save(restaurant);
 
         userRepository.deleteById(chefId);
 

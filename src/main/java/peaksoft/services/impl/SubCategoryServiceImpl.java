@@ -47,7 +47,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     }
 
     @Override
-    public List<SubCategoryResponse> findAll(Long categoryId) {
+    public List<SubCategoryResponse> findAllByCategory(Long categoryId) {
         return subCategoryRepository.findAllSubCategories(categoryId);
     }
 
@@ -96,5 +96,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
                 .status(HttpStatus.OK)
                 .message(String.format("Sub category with id: %d successfully DELETED", subCategoryId)).build();
     }
+
+
+
+
 }
 

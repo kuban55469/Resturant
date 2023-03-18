@@ -1,6 +1,7 @@
 package peaksoft.services.impl;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.WaiterRequest;
 import peaksoft.dto.responses.SimpleResponse;
@@ -25,10 +26,12 @@ import java.util.NoSuchElementException;
 public class WaiterServiceImpl implements WaiterService {
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public WaiterServiceImpl(UserRepository userRepository, RestaurantRepository restaurantRepository) {
+    public WaiterServiceImpl(UserRepository userRepository, RestaurantRepository restaurantRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -40,9 +43,20 @@ public class WaiterServiceImpl implements WaiterService {
         user.setFirstName(waiter.firstName());
         user.setLastName(waiter.lastName());
         user.setEmail(waiter.email());
-        user.setPassword(waiter.password());
+        user.setPassword(passwordEncoder.encode(waiter.password()));
         user.setPhoneNumber(waiter.phoneNumber());
         user.setRole(Role.WAITER);
+
+        int count = restaurant.getUsers().size();
+        if (count > 14){
+            return SimpleResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("Sorry we haven't run out of vacancies").build();
+        }else {
+            restaurant.setNumberOfEmployees(++count);
+            restaurantRepository.save(restaurant);
+        }
+
         LocalDate now = LocalDate.now();
         int age = Period.between(waiter.dateOfBrith(), now).getYears();
         if (age < 18 || age > 30){
@@ -133,6 +147,10 @@ public class WaiterServiceImpl implements WaiterService {
                 String.format("Restaurant with id: %d doesn't exist", restId)));
 
         restaurant.getUsers().removeIf(w->w.getId().equals(waiterId));
+
+        int count = restaurant.getUsers().size();
+        restaurant.setNumberOfEmployees(count--);
+        restaurantRepository.save(restaurant);
 
         userRepository.deleteById(waiterId);
 

@@ -35,6 +35,7 @@ public class User implements UserDetails {
     private Role role;
     private Integer experience;
 
+    private Boolean acceptOrDelete;
     @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

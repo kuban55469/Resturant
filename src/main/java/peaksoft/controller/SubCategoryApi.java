@@ -33,8 +33,8 @@ public class SubCategoryApi {
 
     @GetMapping("/{categoryId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<SubCategoryResponse> findAll(@PathVariable Long categoryId){
-        return subCategoryService.findAll(categoryId);
+    public List<SubCategoryResponse> findAllByCategory(@PathVariable Long categoryId){
+        return subCategoryService.findAllByCategory(categoryId);
     }
 
     @GetMapping("/getById/{subId}")
@@ -56,4 +56,7 @@ public class SubCategoryApi {
                                     @PathVariable Long subCategoryId){
         return subCategoryService.deleteSub(categoryId, subCategoryId);
     }
+
+
+
 }

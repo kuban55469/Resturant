@@ -1,6 +1,7 @@
 package peaksoft.services;
 
 import peaksoft.dto.requests.CategoryRequest;
+import peaksoft.dto.responses.CategoryGroupSubResponse;
 import peaksoft.dto.responses.CategoryResponse;
 import peaksoft.dto.responses.SimpleResponse;
 
@@ -20,5 +21,7 @@ public interface CategoryService {
     SimpleResponse updateCategory(Long categoryId, CategoryRequest category);
 
     SimpleResponse delete(Long categoryId);
+
+    CategoryGroupSubResponse groupSupCategories(Long categoryId);
 
 }

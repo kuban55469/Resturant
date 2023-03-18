@@ -3,10 +3,13 @@ package peaksoft.services.impl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.CategoryRequest;
+import peaksoft.dto.responses.CategoryGroupSubResponse;
 import peaksoft.dto.responses.CategoryResponse;
 import peaksoft.dto.responses.SimpleResponse;
+import peaksoft.dto.responses.SubCategoryResponse;
 import peaksoft.entity.Category;
 import peaksoft.repositories.CategoryRepository;
+import peaksoft.repositories.SubCategoryRepository;
 import peaksoft.services.CategoryService;
 
 import java.util.List;
@@ -19,9 +22,11 @@ import java.util.NoSuchElementException;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository) {
         this.categoryRepository = categoryRepository;
+        this.subCategoryRepository = subCategoryRepository;
     }
 
     @Override
@@ -72,5 +77,15 @@ public class CategoryServiceImpl implements CategoryService {
                 .status(HttpStatus.OK)
                 .message(String.format("Category with name: %d is successfully DELETED", categoryId))
                 .build();
+    }
+
+
+    @Override
+    public CategoryGroupSubResponse groupSupCategories(Long categoryId) {
+        CategoryGroupSubResponse categoryGroupSubResponse = categoryRepository.findCategory(categoryId).orElseThrow();
+        List<SubCategoryResponse> subCategoryResponses = subCategoryRepository.findAllSubCategoriesByCategory(categoryId);
+
+        categoryGroupSubResponse.setSubCategories(subCategoryResponses);
+        return categoryGroupSubResponse;
     }
 }
