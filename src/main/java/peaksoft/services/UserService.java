@@ -1,12 +1,18 @@
 package peaksoft.services;
 
-import org.springframework.stereotype.Service;
+import peaksoft.dto.requests.UserInfoRequest;
+
+import peaksoft.dto.requests.WaiterRequest;
+import peaksoft.dto.responses.SimpleResponse;
+import peaksoft.dto.responses.UserInfoResponse;
 
 /**
  * @author :ЛОКИ Kelsivbekov
  * @created 16.03.2023
  */
-@Service
-public interface AuthService {
-    private final
+
+public interface UserService {
+    UserInfoResponse authenticate(UserInfoRequest userInfoRequest);
+
+
 }

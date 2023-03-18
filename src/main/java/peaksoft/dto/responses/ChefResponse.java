@@ -1,12 +1,13 @@
 package peaksoft.dto.responses;
 
+
 import java.time.LocalDate;
 
 /**
  * @author :ЛОКИ Kelsivbekov
  * @created 17.03.2023
  */
-public record ChefResponce(
+public record ChefResponse(
         Long id,
         String firstName,
         String lastName,

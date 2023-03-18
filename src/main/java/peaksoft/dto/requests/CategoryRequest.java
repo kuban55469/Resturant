@@ -1,5 +1,13 @@
-package peaksoft.dto.requests;/**
-    @created 18.03.2023   
-    @author  :ЛОКИ Kelsivbekov 
-*/public record CategoryRequest() {
+package peaksoft.dto.requests;
+
+import lombok.Builder;
+
+/**
+ * @author :ЛОКИ Kelsivbekov
+ * @created 18.03.2023
+ */
+@Builder
+public record CategoryRequest(
+        String name
+) {
 }

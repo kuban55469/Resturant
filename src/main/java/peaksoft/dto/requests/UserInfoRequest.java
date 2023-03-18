@@ -1,5 +1,16 @@
-package peaksoft.dto.requests;/**
-    @created 16.03.2023   
-    @author  :ЛОКИ Kelsivbekov 
-*/public record UserInfoRequest() {
+package peaksoft.dto.requests;
+
+import jakarta.validation.constraints.Email;
+import lombok.Builder;
+
+/**
+ * @author :ЛОКИ Kelsivbekov
+ * @created 16.03.2023
+ */
+@Builder
+public record UserInfoRequest(
+        @Email
+        String email,
+        String password
+) {
 }
