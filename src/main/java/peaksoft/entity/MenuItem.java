@@ -34,7 +34,7 @@ public class MenuItem {
     @OneToMany(mappedBy = "menuItem", cascade = ALL)
     private List<SubCategory> subCategories;
 
-    @OneToOne(mappedBy = "menuItem", cascade = ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "menuItem", cascade = ALL)
     private StopList stopList;
 
     @ManyToMany(mappedBy = "menuItems", cascade = {PERSIST, MERGE, REFRESH, DETACH})

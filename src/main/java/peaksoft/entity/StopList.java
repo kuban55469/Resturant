@@ -22,7 +22,7 @@ public class StopList {
     private String reason;
     private LocalDate date;
 
-    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH}, orphanRemoval = true)
+    @OneToOne(cascade = {MERGE, REFRESH, DETACH})
     @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
 
