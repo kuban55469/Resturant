@@ -32,7 +32,7 @@ public class Restaurant {
     private List<User> users = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "restaurant",cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant",cascade = ALL, orphanRemoval = true, fetch = EAGER)
     private List<MenuItem> menuItems = new ArrayList<>();
 
 
@@ -42,5 +42,9 @@ public class Restaurant {
 
     public void addWaiter(User user) {
         users.add(user);
+    }
+
+    public void addMenu(MenuItem menuItem) {
+        menuItems.add(menuItem);
     }
 }

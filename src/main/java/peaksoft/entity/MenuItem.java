@@ -28,7 +28,7 @@ public class MenuItem {
     private Boolean isVegetarian;
 
 
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "menuItem", cascade = ALL)
