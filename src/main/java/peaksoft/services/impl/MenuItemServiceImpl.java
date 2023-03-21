@@ -7,12 +7,13 @@ import peaksoft.dto.responses.ManuResponse;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.entity.MenuItem;
 import peaksoft.entity.Restaurant;
+import peaksoft.exeption.BadRequestException;
+import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.MenuItemRepository;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.services.MenuItemService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -31,9 +32,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public SimpleResponse saveManu(Long restId, MenuRequest request) {
         if (!restaurantRepository.existsById(restId)){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Restaurant with id: %d doesn't exist", restId)).build();
+            throw new NotFoundException(String.format("Restaurant with id: %d doesnt exist", restId));
         }
 
         Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow();
@@ -42,9 +41,11 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItem.setName(request.name());
         menuItem.setImage(request.image());
         menuItem.setDescription(request.description());
+
         if (request.price().intValue() < 0){
-            return SimpleResponse.builder().status(HttpStatus.BAD_REQUEST).message("Price must be greater than 0").build();
+            throw new BadRequestException("Price must be greater than 0");
         }
+
         menuItem.setPrice(request.price());
         menuItem.setIsVegetarian(request.isVegetarian());
 
@@ -62,13 +63,13 @@ public class MenuItemServiceImpl implements MenuItemService {
         } else if (sort.equals("DESC")) {
             return menuItemRepository.findAllMenusDesc(restId, isVegetarian);
         }else {
-            return null;
+            throw new BadRequestException("Tuura jaz!!!");
         }
     }
 
     @Override
     public ManuResponse findByMenuId(Long menuId) {
-        return menuItemRepository.findByMenuId(menuId).orElseThrow(() -> new NegativeArraySizeException(
+        return menuItemRepository.findByMenuId(menuId).orElseThrow(() -> new NotFoundException(
                 String.format("Menu with id: %d doesn't exist", menuId)
         ));
     }
@@ -76,15 +77,13 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public SimpleResponse updateMenu(Long menuId, MenuRequest request) {
         if (!menuItemRepository.existsById(menuId)){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Menu with id:" + menuId + " doesn't exist").build();
+            throw new NotFoundException("Menu with id:" + menuId + " doesn't exist");
         }
         MenuItem menuItem = menuItemRepository.findById(menuId).orElseThrow();
         menuItem.setName(request.name());
         menuItem.setImage(request.image());
         if (request.price().intValue() < 0){
-            return SimpleResponse.builder().status(HttpStatus.BAD_REQUEST).message("Price must be greater than 0").build();
+            throw new BadRequestException("Price must be greater than 0");
         }
         menuItem.setPrice(request.price());
         menuItem.setDescription(request.description());
@@ -97,9 +96,9 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public SimpleResponse deleteManu(Long restId, Long menuId) {
-        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NoSuchElementException(
+        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NotFoundException(
                 String.format("Restaurant with id: %d doesn't exist", menuId)));
-        MenuItem menuItem = menuItemRepository.findById(menuId).orElseThrow(() -> new NoSuchElementException(
+        MenuItem menuItem = menuItemRepository.findById(menuId).orElseThrow(() -> new NotFoundException(
                 String.format("Menu with id: %d doesn't exist", menuId)
         ));
 

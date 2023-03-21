@@ -10,10 +10,10 @@ import peaksoft.dto.requests.UserInfoRequest;
 import peaksoft.dto.responses.UserInfoResponse;
 import peaksoft.entity.User;
 import peaksoft.enums.Role;
+import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.UserService;
 
-import java.util.NoSuchElementException;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         );
 
         User user = userRepository.findByEmail(userInfoRequest.email())
-                .orElseThrow(() -> new NoSuchElementException(
+                .orElseThrow(() -> new NotFoundException(
                         String.format("User with email: %s doesn't exists", userInfoRequest.email())));
         String token = jwtUtil.generateToken(user);
 

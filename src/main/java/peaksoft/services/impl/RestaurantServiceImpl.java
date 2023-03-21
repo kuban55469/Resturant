@@ -6,11 +6,11 @@ import peaksoft.dto.requests.RestaurantRequest;
 import peaksoft.dto.responses.RestaurantResponse;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.entity.Restaurant;
+import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.services.RestaurantService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -54,9 +54,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public SimpleResponse deleteRestaurant(Long restId) {
 
         if (!restaurantRepository.existsById(restId)) {
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Restaurant with id: %d is not found", restId)).build();
+            throw new NotFoundException(String.format("Restaurant with id: %d doesn't exist", restId));
         }
 
 
@@ -70,7 +68,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public SimpleResponse updateRestaurant(Long restaurantId, RestaurantRequest restaurantRequest) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new NoSuchElementException(
+                .orElseThrow(() -> new NotFoundException(
                         String.format("Restaurant with id: %d in not", restaurantId)));
         restaurant.setName(restaurantRequest.name());
         restaurant.setLocation(restaurantRequest.location());
@@ -84,6 +82,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantResponse findById(Long restId) {
+        if (!restaurantRepository.existsById(restId)){
+            throw new NotFoundException(String.format("Restaurant with id: %d doesnt exist", restId));
+        }
         return restaurantRepository.findRestaurantById(restId);
     }
 }

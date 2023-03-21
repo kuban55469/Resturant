@@ -23,6 +23,6 @@ public class SubCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     private MenuItem menuItem;
 }

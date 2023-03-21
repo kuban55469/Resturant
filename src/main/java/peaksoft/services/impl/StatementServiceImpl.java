@@ -9,12 +9,13 @@ import peaksoft.dto.responses.StatementResponse;
 import peaksoft.entity.Restaurant;
 import peaksoft.entity.User;
 import peaksoft.enums.Role;
+import peaksoft.exeption.BadRequestException;
+import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.StatementService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -59,20 +60,16 @@ public class StatementServiceImpl implements StatementService {
     @Override
     public SimpleResponse acceptOrDelete(Long restId, Long newStateId, Boolean acceptOrDel) {
         if (!restaurantRepository.existsById(restId)) {
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Restaurant with id: %d is not found", restId)).build();
+            throw new NotFoundException(String.format("Restaurant with id: %d is not found", restId));
         }
-        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NoSuchElementException(
+        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NotFoundException(
                 String.format("Restaurant with Id: %d doesn't exist", restId)));
 
         if (!userRepository.existsById(newStateId)) {
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Employee with id: %d is not found", newStateId)).build();
+            throw new NotFoundException(String.format("Employee with id: %d is not found", newStateId));
         }
 
-        User user = userRepository.findById(newStateId).orElseThrow(() -> new NoSuchElementException(
+        User user = userRepository.findById(newStateId).orElseThrow(() -> new NotFoundException(
                 String.format("Employee with id: %d is doesn't exist", newStateId)));
 
         if (acceptOrDel) {
@@ -80,9 +77,7 @@ public class StatementServiceImpl implements StatementService {
                 restaurant.addChef(user);
                 int count = restaurant.getUsers().size();
                 if (count > 14) {
-                    return SimpleResponse.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("Sorry we haven't run out of vacancies").build();
+                    throw new BadRequestException("Sorry we haven't run out of vacancies");
                 }
                 user.setRestaurant(restaurant);
                 userRepository.save(user);
@@ -98,9 +93,7 @@ public class StatementServiceImpl implements StatementService {
 
                 int count = restaurant.getUsers().size();
                 if (count > 14) {
-                    return SimpleResponse.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("Sorry we haven't run out of vacancies").build();
+                    throw new BadRequestException("Sorry we haven't run out of vacancies");
                 }
 
                 user.setRestaurant(restaurant);
@@ -110,12 +103,10 @@ public class StatementServiceImpl implements StatementService {
                 return SimpleResponse.builder().status(HttpStatus.OK)
                         .message(String.format("New Waiter with full name: %s successfully SAVED",
                                 user.getFirstName().concat(" " + user.getLastName()))).build();
-
             }
         }
 
         userRepository.delete(user);
-        return SimpleResponse.builder().status(HttpStatus.BAD_REQUEST)
-                .message(("Sorry we haven't run out of vacancies ")).build();
+        throw new BadRequestException("Sorry we haven't run out of vacancies ");
     }
 }

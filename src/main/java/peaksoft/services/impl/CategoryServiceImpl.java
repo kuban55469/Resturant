@@ -8,12 +8,12 @@ import peaksoft.dto.responses.CategoryResponse;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SubCategoryResponse;
 import peaksoft.entity.Category;
+import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.CategoryRepository;
 import peaksoft.repositories.SubCategoryRepository;
 import peaksoft.services.CategoryService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -48,12 +48,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse findById(Long categoryId) {
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new NotFoundException(String.format("Category with id: %d is not found", categoryId));
+        }
         return categoryRepository.findByCategoryId(categoryId);
     }
 
     @Override
     public SimpleResponse updateCategory(Long categoryId, CategoryRequest category) {
-        Category category1 = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchElementException(
+        Category category1 = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 String.format("Category with id: %d doesn't exist", categoryId)));
 
         category1.setName(category.name());
@@ -68,9 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public SimpleResponse delete(Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Category with id: %d is not found", categoryId)).build();
+            throw new NotFoundException(String.format("Category with id: %d is not found", categoryId));
         }
         categoryRepository.deleteById(categoryId);
         return SimpleResponse.builder()
@@ -82,6 +83,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryGroupSubResponse groupSupCategories(Long categoryId) {
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new NotFoundException(String.format("Category with id: %d is not found", categoryId));
+        }
         CategoryGroupSubResponse categoryGroupSubResponse = categoryRepository.findCategory(categoryId).orElseThrow();
         List<SubCategoryResponse> subCategoryResponses = subCategoryRepository.findAllSubCategoriesByCategory(categoryId);
 

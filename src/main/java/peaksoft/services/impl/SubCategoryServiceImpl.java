@@ -7,12 +7,12 @@ import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SubCategoryResponse;
 import peaksoft.entity.Category;
 import peaksoft.entity.SubCategory;
+import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.CategoryRepository;
 import peaksoft.repositories.SubCategoryRepository;
 import peaksoft.services.SubCategoryService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -30,8 +30,11 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public SimpleResponse save(Long categoryId, SubCategoryRequest request) {
+        if (!categoryRepository.existsById(categoryId)){
+            throw new NotFoundException(String.format("Category with id: %d doesn't exist", categoryId));
+        }
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchElementException(
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 String.format("Category with id: %d doesn't exist", categoryId)));
 
         SubCategory subCategory = new SubCategory();
@@ -53,22 +56,22 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public SubCategoryResponse getById(Long subId) {
-        return subCategoryRepository.findByIdSub(subId).orElseThrow(() -> new NoSuchElementException(
+        if (!subCategoryRepository.existsById(subId)){
+            throw new NotFoundException(String.format("Sub Category with id: %d doesn't exist", subId));
+        }
+        return subCategoryRepository.findByIdSub(subId).orElseThrow(() -> new NotFoundException(
                 String.format("Sub Category with id: %d doesn't exist", subId)
         ));
     }
 
     @Override
     public SimpleResponse update(Long subId, SubCategoryRequest request) {
-        SubCategory subCategory = subCategoryRepository.findById(subId).orElseThrow(() -> new NoSuchElementException(
+        if (!subCategoryRepository.existsById(subId)){
+            throw new NotFoundException(String.format("Sub Category with id: %d doesn't exist", subId));
+        }
+        SubCategory subCategory = subCategoryRepository.findById(subId).orElseThrow(() -> new NotFoundException(
                 String.format("Sub category with Id: %d doesn't exist", subId)
         ));
-
-        if (!subCategoryRepository.existsById(subId)){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Sub Category with id:" + subId + " doesn't exist").build();
-        }
 
         subCategory.setName(request.name());
         subCategoryRepository.save(subCategory);
@@ -79,13 +82,14 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public SimpleResponse deleteSub(Long categoryId, Long subCategoryId) {
+        if (!categoryRepository.existsById(categoryId)){
+            throw new NotFoundException(String.format("Category with id: %d doesn't exist", categoryId));
+        }
         if (!subCategoryRepository.existsById(subCategoryId)){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Sub category with id: %d doesn't exist", subCategoryId)).build();
+            throw new NotFoundException(String.format("Sub Category with id: %d doesn't exist", subCategoryId));
         }
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchElementException(
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 String.format("Category with id: %d doesn't exist", categoryId)
         ));
 
@@ -96,9 +100,6 @@ public class SubCategoryServiceImpl implements SubCategoryService {
                 .status(HttpStatus.OK)
                 .message(String.format("Sub category with id: %d successfully DELETED", subCategoryId)).build();
     }
-
-
-
 
 }
 

@@ -19,4 +19,12 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     @Query("select new peaksoft.dto.responses.ManuResponse(m.id, m.name, m.image, m.price, m.description, m.isVegetarian)" +
            " from MenuItem m where m.id=?1")
     Optional<ManuResponse> findByMenuId(Long menuId);
+
+    @Query("select new peaksoft.dto.responses.ManuResponse(m.id, m.name, m.image, m.price, m.description, m.isVegetarian)" +
+           " from MenuItem m")
+    List<ManuResponse> findAllMenusCheque();
+
+    @Query("select new peaksoft.dto.responses.ManuResponse(m.id, m.name, m.image, m.price, m.description, m.isVegetarian)" +
+           " from MenuItem m where m.id=?1")
+    Optional<ManuResponse> findByIdMenuId(Long id);
 }

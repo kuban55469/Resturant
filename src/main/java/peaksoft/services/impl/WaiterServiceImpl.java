@@ -9,6 +9,8 @@ import peaksoft.dto.responses.WaiterResponse;
 import peaksoft.entity.Restaurant;
 import peaksoft.entity.User;
 import peaksoft.enums.Role;
+import peaksoft.exeption.BadRequestException;
+import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.WaiterService;
@@ -16,7 +18,6 @@ import peaksoft.services.WaiterService;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -36,7 +37,10 @@ public class WaiterServiceImpl implements WaiterService {
 
     @Override
     public SimpleResponse saveWaiter(Long restId, WaiterRequest waiter) {
-        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NoSuchElementException(
+        if (!restaurantRepository.existsById(restId)){
+            throw new NotFoundException(String.format("Restaurant with id: %d doesn't exist", restId));
+        }
+        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NotFoundException(
                 String.format("Restaurant with id: %d doesn't exist", restId)));
 
         User user = new User();
@@ -49,9 +53,7 @@ public class WaiterServiceImpl implements WaiterService {
 
         int count = restaurant.getUsers().size();
         if (count > 14){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("Sorry we haven't run out of vacancies").build();
+            throw new BadRequestException("Sorry we haven't run out of vacancies");
         }else {
             restaurant.setNumberOfEmployees(++count);
             restaurantRepository.save(restaurant);
@@ -60,18 +62,12 @@ public class WaiterServiceImpl implements WaiterService {
         LocalDate now = LocalDate.now();
         int age = Period.between(waiter.dateOfBrith(), now).getYears();
         if (age < 18 || age > 30){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("The age of the waiter must be between 18 and 30 years old")
-                    .build();
+            throw new BadRequestException("The age of the waiter must be between 18 and 30 years old");
         }
         user.setDateOfBrith(waiter.dateOfBrith());
 
         if (waiter.experience() < 1){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("The experience of the waiter must be 1 years old")
-                    .build();
+            throw new BadRequestException("The experience of the waiter must be 1 years old");
         }
         user.setExperience(waiter.experience());
 
@@ -86,13 +82,16 @@ public class WaiterServiceImpl implements WaiterService {
 
     @Override
     public List<WaiterResponse> findAllWaiters(Long restId, Role role) {
+        if (!restaurantRepository.existsById(restId)){
+            throw new NotFoundException(String.format("Restaurant with id: %d doesnt exist", restId));
+        }
         return userRepository.findAllWaiters(restId, role);
     }
 
     @Override
     public WaiterResponse findById(Long waiterId, Role role) {
         return userRepository.findByWaiterId(waiterId, role).orElseThrow(
-                () -> new NoSuchElementException(String.format(
+                () -> new NotFoundException(String.format(
                         "Waiter with id: %d doesn't exist", waiterId
                 ))
         );
@@ -100,7 +99,11 @@ public class WaiterServiceImpl implements WaiterService {
 
     @Override
     public SimpleResponse updateWaiter(Long waiterId, WaiterRequest waiter) {
-        User user = userRepository.findById(waiterId).orElseThrow(() -> new NoSuchElementException(String.format(
+        if (!userRepository.existsById(waiterId)){
+            throw new NotFoundException(String.format("Waiter with id: %d doesnt exist", waiterId));
+        }
+
+        User user = userRepository.findById(waiterId).orElseThrow(() -> new NotFoundException(String.format(
                 "Waiter with id: %d doesn't exist", waiterId)));
         user.setFirstName(waiter.firstName());
         user.setLastName(waiter.lastName());
@@ -111,18 +114,12 @@ public class WaiterServiceImpl implements WaiterService {
         LocalDate now = LocalDate.now();
         int age = Period.between(waiter.dateOfBrith(), now).getYears();
         if (age < 18 || age > 30){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("The age of the waiter must be between 18 and 30 years old")
-                    .build();
+            throw new BadRequestException("The age of the waiter must be between 18 and 30 years old");
         }
         user.setDateOfBrith(waiter.dateOfBrith());
 
         if (waiter.experience() < 1){
-            return SimpleResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("The experience of the waiter must be 1 years old")
-                    .build();
+            throw new BadRequestException("The experience of the waiter must be 1 years old");
         }
         user.setExperience(waiter.experience());
 
@@ -138,12 +135,10 @@ public class WaiterServiceImpl implements WaiterService {
     public SimpleResponse deleteWaiter(Long restId, Long waiterId) {
 
         if (!userRepository.existsById(waiterId)) {
-            return SimpleResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Waiter with id: %d is not found", waiterId)).build();
+            throw new NotFoundException(String.format("Waiter with id: %d is not found", waiterId));
         }
 
-        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NoSuchElementException(
+        Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NotFoundException(
                 String.format("Restaurant with id: %d doesn't exist", restId)));
 
         restaurant.getUsers().removeIf(w->w.getId().equals(waiterId));

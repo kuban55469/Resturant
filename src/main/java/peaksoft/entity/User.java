@@ -36,12 +36,12 @@ public class User implements UserDetails {
     private Integer experience;
 
     private Boolean acceptOrDelete;
-    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = LAZY)
+    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "user", cascade = {PERSIST, MERGE, REFRESH, DETACH}, orphanRemoval = true)
-    private List<Cheque> cheques = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = EAGER)
+    private List<Cheque> cheques;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -57,6 +57,7 @@ public class User implements UserDetails {
     public String getPassword() {
         return this.password;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -75,5 +76,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addCheque(Cheque cheque) {
+        if (cheques == null) {
+            cheques = new ArrayList<>();
+        }
+        cheques.add(cheque);
     }
 }

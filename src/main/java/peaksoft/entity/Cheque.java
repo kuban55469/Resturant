@@ -4,11 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -23,17 +22,23 @@ public class Cheque {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private Integer priceAverage;
-    private LocalDateTime createdAd;
+    private BigDecimal priceAverage;
+    private LocalDate createdAd;
 
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToMany(cascade = {MERGE, REFRESH, DETACH},fetch = FetchType.EAGER)
     @JoinTable(name = "cheques_menu_items",
             joinColumns = @JoinColumn(name = "cheque_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_items_id"))
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private List<MenuItem> menuItems ;
 
+    public void addMenuIterm(MenuItem menuItem) {
+        if (menuItems==null){
+            menuItems=new ArrayList<>();
+        }
+        menuItems.add(menuItem);
+    }
 }
