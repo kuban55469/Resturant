@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
 
 @Getter
@@ -23,6 +26,14 @@ public class SubCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
-    private MenuItem menuItem;
+
+    @OneToMany(mappedBy = "subCategory", cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER,orphanRemoval = true)
+    private List<MenuItem> menuItems;
+
+    public void addMenuItem(MenuItem menuItem) {
+        if (menuItem == null){
+            menuItems = new ArrayList<>();
+        }
+        menuItems.add(menuItem);
+    }
 }

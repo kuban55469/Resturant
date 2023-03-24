@@ -11,7 +11,7 @@ import java.util.List;
  * @created 18.03.2023
  */
 public interface MenuItemService {
-    SimpleResponse saveManu(Long restId, MenuRequest menuRequest);
+    SimpleResponse saveManu(Long restId, Long subCategoryId, MenuRequest menuRequest);
 
     List<ManuResponse> findAllMenus(Long restId, String sort, Boolean isVegetarian);
 

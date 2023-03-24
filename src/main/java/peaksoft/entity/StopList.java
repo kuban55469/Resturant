@@ -22,8 +22,7 @@ public class StopList {
     private String reason;
     private LocalDate date;
 
-    @OneToOne(cascade = {MERGE, REFRESH, DETACH},fetch = FetchType.EAGER)
+    @OneToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
-
 }

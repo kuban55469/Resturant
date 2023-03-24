@@ -10,6 +10,7 @@ import java.math.BigDecimal;
  */
 @Builder
 public record SimpleResponse1(
+        String fullName,
         BigDecimal totalPrice
 ) {
 }

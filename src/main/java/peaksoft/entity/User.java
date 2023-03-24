@@ -1,6 +1,8 @@
 package peaksoft.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import peaksoft.enums.Role;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.*;
 
 import static jakarta.persistence.CascadeType.*;
@@ -27,8 +30,9 @@ public class User implements UserDetails {
 
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBrith;
+    private long dateOfBrith;
     private String email;
+    @Size(min = 4, message = "Password simbols greater 4")
     private String password;
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
@@ -36,7 +40,7 @@ public class User implements UserDetails {
     private Integer experience;
 
     private Boolean acceptOrDelete;
-    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = EAGER)
+    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}) //, fetch = EAGER
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 

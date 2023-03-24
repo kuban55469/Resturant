@@ -16,7 +16,7 @@ public record StatementResponse(
         Long id,
         String firstName,
         String lastName,
-        LocalDate dateOfBrith,
+        long dateOfBrith,
         String email,
         String phoneNumber,
         @Enumerated(EnumType.STRING)

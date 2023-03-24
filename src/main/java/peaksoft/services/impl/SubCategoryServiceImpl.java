@@ -6,9 +6,11 @@ import peaksoft.dto.requests.SubCategoryRequest;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SubCategoryResponse;
 import peaksoft.entity.Category;
+import peaksoft.entity.MenuItem;
 import peaksoft.entity.SubCategory;
 import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.CategoryRepository;
+import peaksoft.repositories.MenuItemRepository;
 import peaksoft.repositories.SubCategoryRepository;
 import peaksoft.services.SubCategoryService;
 
@@ -23,9 +25,13 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     private final SubCategoryRepository subCategoryRepository;
 
     private final CategoryRepository categoryRepository;
-    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, CategoryRepository categoryRepository) {
+    private final MenuItemRepository menuItemRepository;
+
+    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, CategoryRepository categoryRepository,
+                                  MenuItemRepository menuItemRepository) {
         this.subCategoryRepository = subCategoryRepository;
         this.categoryRepository = categoryRepository;
+        this.menuItemRepository = menuItemRepository;
     }
 
     @Override
@@ -36,6 +42,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 String.format("Category with id: %d doesn't exist", categoryId)));
+
 
         SubCategory subCategory = new SubCategory();
         subCategory.setName(request.name());
@@ -88,12 +95,18 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         if (!subCategoryRepository.existsById(subCategoryId)){
             throw new NotFoundException(String.format("Sub Category with id: %d doesn't exist", subCategoryId));
         }
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId).orElseThrow();
 
+//        subCategory.getMenuItems().forEach(s -> s.setSubCategory(null));
+//        subCategory.addMenuItem(null);
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(
                 String.format("Category with id: %d doesn't exist", categoryId)
         ));
 
+
         category.getSubCategories().removeIf(c->c.getId().equals(subCategoryId));
+
+
 
         subCategoryRepository.deleteById(subCategoryId);
         return SimpleResponse.builder()

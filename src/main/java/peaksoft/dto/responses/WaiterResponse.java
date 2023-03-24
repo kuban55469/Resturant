@@ -2,7 +2,9 @@ package peaksoft.dto.responses;
 
 import lombok.Builder;
 
+
 import java.time.LocalDate;
+import java.time.Year;
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -13,7 +15,7 @@ public record WaiterResponse(
         Long id,
         String firstName,
         String lastName,
-        LocalDate dateOfBrith,
+        long dateOfBrith,
         String email,
         String phoneNumber,
         Integer experience

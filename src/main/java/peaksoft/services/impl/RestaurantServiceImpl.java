@@ -6,6 +6,7 @@ import peaksoft.dto.requests.RestaurantRequest;
 import peaksoft.dto.responses.RestaurantResponse;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.entity.Restaurant;
+import peaksoft.exeption.BadRequestException;
 import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.services.RestaurantService;
@@ -27,6 +28,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public SimpleResponse saveRestaurant(RestaurantRequest request) {
+
+        List<Restaurant> all = restaurantRepository.findAll();
+        if (all.size() > 0){
+            throw new BadRequestException("Only one restaurant saved only!!!");
+        }
 
         Restaurant restaurant = new Restaurant();
         restaurant.setName(request.name());

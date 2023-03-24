@@ -1,10 +1,12 @@
 package peaksoft.services;
 
 import peaksoft.dto.requests.ChequeRequest;
+import peaksoft.dto.requests.OneDayAvaragePriceRequest;
 import peaksoft.dto.responses.ChequeResponse;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SimpleResponse1;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -21,5 +23,6 @@ public interface ChequeService {
 
     SimpleResponse delete(Long waiterId, Long chequeId);
 
-//    SimpleResponse1 oneDayAveragePrice(Long waiterId);
+    SimpleResponse1 oneDayAveragePrice(OneDayAvaragePriceRequest oneDayAvaragePriceRequest);
+
 }

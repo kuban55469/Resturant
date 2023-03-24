@@ -28,19 +28,23 @@ public class MenuItem {
     private Boolean isVegetarian;
 
 
-    @ManyToOne(cascade = {MERGE, REFRESH, DETACH},fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "menuItem", cascade = {MERGE, REFRESH, DETACH,PERSIST},fetch = FetchType.EAGER)
-    private List<SubCategory> subCategories;
 
-    @OneToOne(mappedBy = "menuItem", cascade = ALL,fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {MERGE, REFRESH, DETACH}, optional = false)
+    private SubCategory subCategory;
+
+
+    @OneToOne(mappedBy = "menuItem", cascade = ALL, fetch = FetchType.EAGER, optional = false)
     private StopList stopList;
 
-    @ManyToMany(mappedBy = "menuItems", cascade = { MERGE, REFRESH, DETACH},fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "menuItems", cascade = { MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
     private List<Cheque> cheques = new ArrayList<>();
 
     public void addCheque(Cheque cheque) {
         cheques.add(cheque);
     }
+
+
 }

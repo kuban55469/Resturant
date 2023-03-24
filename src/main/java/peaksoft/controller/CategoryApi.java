@@ -58,6 +58,7 @@ public class CategoryApi {
 
 
     @GetMapping("/groupCategories/{categoryId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryGroupSubResponse group(@PathVariable Long categoryId){
         return categoryService.groupSupCategories(categoryId);
     }

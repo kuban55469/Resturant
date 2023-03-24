@@ -16,6 +16,7 @@ import peaksoft.services.ChefService;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -65,8 +66,8 @@ public class ChefServiceImpl implements ChefService {
         if (age < 25 || age > 45){
             throw new BadRequestException("The age of the chef must be between 25 and 45 years old");
         }
-        user.setDateOfBrith(cook.dateOfBrith());
-
+        long u = ChronoUnit.YEARS.between(cook.dateOfBrith(), LocalDate.now());
+        user.setDateOfBrith(u);
         if (cook.experience() < 2){
             throw new BadRequestException("The experience of the chef must be 2 years old");
         }
@@ -117,8 +118,8 @@ public class ChefServiceImpl implements ChefService {
         if (age < 25 || age > 45){
             throw new BadRequestException("The age of the chef must be between 25 and 45 years old");
         }
-        user.setDateOfBrith(cook.dateOfBrith());
-
+        long u = ChronoUnit.YEARS.between(cook.dateOfBrith(), LocalDate.now());
+        user.setDateOfBrith(u);
         if (cook.experience() <= 2){
             throw new BadRequestException("The experience of the chef must be 2 years old");
         }
@@ -141,9 +142,6 @@ public class ChefServiceImpl implements ChefService {
         restaurant.getUsers().removeIf(chef ->chef.getId().equals(chefId));
 
         int count = restaurant.getUsers().size();
-        if (count == 0){
-            throw new BadRequestException("We have no employees");
-        }
         restaurant.setNumberOfEmployees(count--);
         restaurantRepository.save(restaurant);
 

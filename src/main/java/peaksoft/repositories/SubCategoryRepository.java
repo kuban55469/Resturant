@@ -19,4 +19,9 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> 
     @Query("select new peaksoft.dto.responses.SubCategoryResponse(s.id, s.name) from SubCategory s where s.category.id=?1")
     List<SubCategoryResponse> findAllSubCategoriesByCategory(Long categoryId);
 
+
+
+//    @Query("delete from SubCategory s where s.id =?1")
+//    void deleteSubCategoryById(Long subCategoryId);
+
 }

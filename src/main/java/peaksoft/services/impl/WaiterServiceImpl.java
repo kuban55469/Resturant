@@ -17,6 +17,7 @@ import peaksoft.services.WaiterService;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -64,8 +65,8 @@ public class WaiterServiceImpl implements WaiterService {
         if (age < 18 || age > 30){
             throw new BadRequestException("The age of the waiter must be between 18 and 30 years old");
         }
-        user.setDateOfBrith(waiter.dateOfBrith());
-
+        long l = ChronoUnit.YEARS.between(waiter.dateOfBrith(), LocalDate.now());
+        user.setDateOfBrith(l);
         if (waiter.experience() < 1){
             throw new BadRequestException("The experience of the waiter must be 1 years old");
         }
@@ -116,8 +117,8 @@ public class WaiterServiceImpl implements WaiterService {
         if (age < 18 || age > 30){
             throw new BadRequestException("The age of the waiter must be between 18 and 30 years old");
         }
-        user.setDateOfBrith(waiter.dateOfBrith());
-
+        long u = ChronoUnit.YEARS.between(waiter.dateOfBrith(), LocalDate.now());
+        user.setDateOfBrith(u);
         if (waiter.experience() < 1){
             throw new BadRequestException("The experience of the waiter must be 1 years old");
         }

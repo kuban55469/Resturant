@@ -1,7 +1,7 @@
 package peaksoft.dto.responses;
 
 
-import java.time.LocalDate;
+
 
 /**
  * @author :ЛОКИ Kelsivbekov
@@ -11,7 +11,7 @@ public record ChefResponse(
         Long id,
         String firstName,
         String lastName,
-        LocalDate dateOfBrith,
+        long dateOfBrith,
         String email,
         String phoneNumber,
         Integer experience

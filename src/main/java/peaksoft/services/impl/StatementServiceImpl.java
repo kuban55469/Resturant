@@ -15,6 +15,8 @@ import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.StatementService;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -39,7 +41,8 @@ public class StatementServiceImpl implements StatementService {
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setEmail(request.email());
-        user.setDateOfBrith(request.dateOfBrith());
+        long u = ChronoUnit.YEARS.between(request.dateOfBrith(), LocalDate.now());
+        user.setDateOfBrith(u);
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setPhoneNumber(request.phoneNumber());
         user.setRole(request.role());

@@ -20,7 +20,7 @@ public class Category {
 
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SubCategory> subCategories = new ArrayList<>();
 
     public void addSubCategory(SubCategory subCategory) {
