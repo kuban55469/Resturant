@@ -1,6 +1,7 @@
 package peaksoft.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private long dateOfBrith;
+    @Email
     private String email;
     @Size(min = 4, message = "Password simbols greater 4")
     private String password;
@@ -40,7 +42,7 @@ public class User implements UserDetails {
     private Integer experience;
 
     private Boolean acceptOrDelete;
-    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}) //, fetch = EAGER
+    @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 

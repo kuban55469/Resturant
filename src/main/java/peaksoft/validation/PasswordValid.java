@@ -1,7 +1,6 @@
-package peacksoft.validation;
+package peaksoft.validation;
 
 import jakarta.validation.Constraint;
-
 
 import java.lang.annotation.Target;
 

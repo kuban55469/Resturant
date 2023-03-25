@@ -13,6 +13,7 @@ import peaksoft.enums.Role;
 import peaksoft.exeption.BadRequestException;
 import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.ChequeRepository;
+import peaksoft.repositories.MenuItemRepository;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.ChequeService;
@@ -31,11 +32,14 @@ public class ChequeServiceImpl implements ChequeService {
     private final ChequeRepository chequeRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
+    private final MenuItemRepository menuItemRepository;
 
-    public ChequeServiceImpl(ChequeRepository chequeRepository, UserRepository userRepository, RestaurantRepository restaurantRepository) {
+    public ChequeServiceImpl(ChequeRepository chequeRepository, UserRepository userRepository, RestaurantRepository restaurantRepository,
+                             MenuItemRepository menuItemRepository) {
         this.chequeRepository = chequeRepository;
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
+        this.menuItemRepository = menuItemRepository;
     }
 
     @Override
@@ -88,29 +92,32 @@ public class ChequeServiceImpl implements ChequeService {
     }
 
     @Override
-    public SimpleResponse update(Long waiterId, Long chequeId, ChequeRequest chequeRequest) {
-        User waiter = userRepository.findById(waiterId).orElseThrow(() -> new NotFoundException(String.format("Waiter with id: %d doesn't exist", waiterId)));
-
-        Restaurant restaurant = restaurantRepository.findById(waiter.getRestaurant().getId()).orElseThrow();
-
+    public SimpleResponse update(Long chequeId, ChequeRequest chequeRequest) {
+        Cheque cheque = chequeRepository.findById(chequeId).orElseThrow(() -> new NotFoundException(
+                String.format("Cheque with id: %d doesn't exist", chequeId)
+        ));
 
         List<MenuItem> newMenuItems = new ArrayList<>();
-        List<MenuItem> menuItems = restaurant.getMenuItems();
-        List<Long> menuItemIds = chequeRequest.getId();
-        Cheque cheque = chequeRepository.findById(chequeId).orElseThrow();
+        List<MenuItem> menuItems = menuItemRepository.findAll();
 
-        for (Long menuItemId : menuItemIds) {
+        for (Long aLong : chequeRequest.getId()) {
             for (MenuItem menuItem : menuItems) {
-                if (menuItem.getId().equals(menuItemId)) {
+                if (menuItem.getId().equals(aLong)) {
                     newMenuItems.add(menuItem);
                 }
             }
+
+        }
+
+        for (MenuItem menuItem : cheque.getMenuItems()) {
+            menuItem.getCheques().remove(cheque);
         }
 
         for (MenuItem newMenuItem : newMenuItems) {
+            newMenuItem.addCheque(cheque);
             cheque.addMenuIterm(newMenuItem);
         }
-        chequeRepository.save(cheque);
+
 
         return SimpleResponse.builder().
                 status(HttpStatus.OK)
@@ -198,11 +205,9 @@ public class ChequeServiceImpl implements ChequeService {
         }
         List<BigDecimal> ass = new ArrayList<>();
         for (Cheque cheque : user.getCheques()) {
-            for (MenuItem menuItem : cheque.getMenuItems()) {
                 if (cheque.getCreatedAd().equals(request.localDate())) {
-                    ass.add(menuItem.getPrice());
+                    ass.add(cheque.getPriceAverage());
                 }
-            }
         }
         return SimpleResponse1.builder()
                 .fullName(user.getFirstName() + " " + user.getLastName())

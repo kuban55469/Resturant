@@ -6,7 +6,6 @@ import peaksoft.dto.responses.ChequeResponse;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SimpleResponse1;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public interface ChequeService {
 
     List<ChequeResponse> findAll(Long waiterId);
 
-    SimpleResponse update(Long waiterId, Long chequeId, ChequeRequest chequeRequest);
+    SimpleResponse update(Long chequeId, ChequeRequest chequeRequest);
 
 
     SimpleResponse delete(Long waiterId, Long chequeId);

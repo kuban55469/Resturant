@@ -41,6 +41,9 @@ public class WaiterServiceImpl implements WaiterService {
         if (!restaurantRepository.existsById(restId)){
             throw new NotFoundException(String.format("Restaurant with id: %d doesn't exist", restId));
         }
+        if (userRepository.existsByEmail(waiter.email())){
+            throw new BadRequestException("Email must be unique");
+        }
         Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NotFoundException(
                 String.format("Restaurant with id: %d doesn't exist", restId)));
 
@@ -49,6 +52,7 @@ public class WaiterServiceImpl implements WaiterService {
         user.setLastName(waiter.lastName());
         user.setEmail(waiter.email());
         user.setPassword(passwordEncoder.encode(waiter.password()));
+        phoneNumberValid(waiter.phoneNumber());
         user.setPhoneNumber(waiter.phoneNumber());
         user.setRole(Role.WAITER);
 
@@ -103,6 +107,9 @@ public class WaiterServiceImpl implements WaiterService {
         if (!userRepository.existsById(waiterId)){
             throw new NotFoundException(String.format("Waiter with id: %d doesnt exist", waiterId));
         }
+        if (userRepository.existsByEmail(waiter.email())){
+            throw new BadRequestException("Email must be unique");
+        }
 
         User user = userRepository.findById(waiterId).orElseThrow(() -> new NotFoundException(String.format(
                 "Waiter with id: %d doesn't exist", waiterId)));
@@ -110,6 +117,7 @@ public class WaiterServiceImpl implements WaiterService {
         user.setLastName(waiter.lastName());
         user.setEmail(waiter.email());
         user.setPassword(waiter.password());
+        phoneNumberValid(waiter.phoneNumber());
         user.setPhoneNumber(waiter.phoneNumber());
         user.setRole(Role.WAITER);
         LocalDate now = LocalDate.now();
@@ -154,5 +162,11 @@ public class WaiterServiceImpl implements WaiterService {
                 .status(HttpStatus.OK)
                 .message(String.format("Waiter with id: %d is successfully deleted", waiterId))
                 .build();
+    }
+
+    private void phoneNumberValid(String phoneNumber){
+        if (phoneNumber.startsWith("+996") && phoneNumber.length() != 13){
+            throw new BadRequestException("Phone number Invalid");
+        }
     }
 }

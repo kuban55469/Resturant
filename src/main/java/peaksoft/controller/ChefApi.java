@@ -27,7 +27,7 @@ public class ChefApi {
 
     @PostMapping("/{restId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse saveCook(@Valid @RequestBody ChefRequest chefRequest,
+    public SimpleResponse saveCook(@RequestBody @Valid ChefRequest chefRequest,
                                    @PathVariable Long restId){
         return chefService.saveCook(restId, chefRequest);
     }
@@ -48,8 +48,8 @@ public class ChefApi {
 
     @PutMapping("/{chefId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse updateChef(@Valid @PathVariable Long chefId,
-                                     @RequestBody ChefRequest chefRequest){
+    public SimpleResponse updateChef(@PathVariable Long chefId,
+                                     @RequestBody @Valid ChefRequest chefRequest){
         return chefService.updateChefById(chefId, chefRequest);
     }
 

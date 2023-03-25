@@ -39,7 +39,7 @@ public class MenuItem {
     @OneToOne(mappedBy = "menuItem", cascade = ALL, fetch = FetchType.EAGER, optional = false)
     private StopList stopList;
 
-    @ManyToMany(mappedBy = "menuItems", cascade = { MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "menuItems", cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
     private List<Cheque> cheques = new ArrayList<>();
 
     public void addCheque(Cheque cheque) {

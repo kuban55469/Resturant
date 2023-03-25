@@ -40,12 +40,11 @@ public class ChequeApi {
         return chequeService.findAll(waiterId);
     }
 
-    @PutMapping("/{waiterId}/{chequeId}")
+    @PutMapping("/{chequeId}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'WAITER')")
-    public SimpleResponse update(@PathVariable Long waiterId,
-                                 @PathVariable Long chequeId,
+    public SimpleResponse update(@PathVariable Long chequeId,
                                  @RequestBody ChequeRequest chequeRequest){
-        return chequeService.update(waiterId, chequeId, chequeRequest);
+        return chequeService.update(chequeId, chequeRequest);
     }
 
     @DeleteMapping("/{waiterId}/{chequeId}")

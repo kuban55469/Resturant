@@ -10,6 +10,7 @@ import peaksoft.entity.User;
 import peaksoft.enums.Role;
 import peaksoft.exeption.BadRequestException;
 import peaksoft.exeption.NotFoundException;
+import peaksoft.exeption.PhoneNumberException;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.ChefService;
@@ -39,6 +40,12 @@ public class ChefServiceImpl implements ChefService {
 
     @Override
     public SimpleResponse saveCook(Long restId, ChefRequest cook) {
+        if (!restaurantRepository.existsById(restId)){
+            throw new BadRequestException(String.format("Restaurant with id: %d doesn't exist", restId));
+        }
+        if (userRepository.existsByEmail(cook.email())){
+            throw new BadRequestException("Email must be unique");
+        }
         Restaurant restaurant = restaurantRepository.findById(restId).orElseThrow(() -> new NotFoundException(
                 String.format("Restaurant with id: %d not found.",restId )
         ));
@@ -46,6 +53,7 @@ public class ChefServiceImpl implements ChefService {
         User user = new User();
         user.setFirstName(cook.firstName());
         user.setLastName(cook.lastName());
+        phoneValid(cook.phoneNumber());
         user.setPhoneNumber(cook.phoneNumber());
         user.setEmail(cook.email());
 
@@ -102,6 +110,9 @@ public class ChefServiceImpl implements ChefService {
 
     @Override
     public SimpleResponse updateChefById(Long chefId, ChefRequest cook) {
+        if (userRepository.existsByEmail(cook.email())){
+            throw new BadRequestException("Email must be unique");
+        }
         User user = userRepository.findById(chefId).orElseThrow(() -> new NotFoundException(
                 String.format("Chef with id: %d doesn't exist", chefId)));
 
@@ -152,6 +163,19 @@ public class ChefServiceImpl implements ChefService {
                 .message(String.format(
                         "Chef with id: %d successfully deleted",chefId
                 )).build();
+    }
+
+    private void phoneValid(String phoneNumber){
+        if (phoneNumber == null || phoneNumber.isEmpty()){
+            throw new NullPointerException("Phone number is null!!");
+        }
+        if (phoneNumber.length() != 13){
+            throw new PhoneNumberException("Номер телефона не должен быть короче 13 цифр!");
+        }
+
+        if (!phoneNumber.startsWith("+996")){
+            throw new PhoneNumberException("Номер телефона должен начаться с +996");
+        }
     }
 
 }

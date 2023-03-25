@@ -1,4 +1,4 @@
-package peacksoft.validation;
+package peaksoft.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

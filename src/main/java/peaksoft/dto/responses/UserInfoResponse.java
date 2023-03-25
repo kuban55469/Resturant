@@ -1,5 +1,6 @@
 package peaksoft.dto.responses;
 
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Builder;
 @Builder
 public record UserInfoResponse(
 
+        @Email
         String email,
         String token
 ) {

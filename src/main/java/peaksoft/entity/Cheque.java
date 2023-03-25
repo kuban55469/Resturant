@@ -29,7 +29,7 @@ public class Cheque {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
     @JoinTable(name = "cheques_menu_items",
             joinColumns = @JoinColumn(name = "cheque_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_items_id"))
