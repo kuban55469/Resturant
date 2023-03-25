@@ -17,12 +17,10 @@ public class StopList {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stop_list_seq")
     @SequenceGenerator(name = "stop_list_seq", allocationSize = 1)
-    @Column(name = "id", nullable = false)
     private Long id;
     private String reason;
     private LocalDate date;
 
     @OneToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
 }

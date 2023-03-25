@@ -35,7 +35,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     @Override
-    public SimpleResponse saveManu(Long restId,Long subCategoryId, MenuRequest request) {
+    public SimpleResponse saveManu(Long restId, Long subCategoryId, MenuRequest request) {
         if (!restaurantRepository.existsById(restId)){
             throw new NotFoundException(String.format("Restaurant with id: %d doesnt exist", restId));
         }
@@ -47,7 +47,6 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItem.setName(request.name());
         menuItem.setImage(request.image());
         menuItem.setDescription(request.description());
-
         if (request.price().intValue() < 0){
             throw new BadRequestException("Price must be greater than 0");
         }
@@ -112,11 +111,9 @@ public class MenuItemServiceImpl implements MenuItemService {
                 String.format("Menu with id: %d doesn't exist", menuId)
         ));
 
-
         restaurant.getMenuItems().removeIf(m -> m.getId().equals(menuId));
 
         menuItemRepository.delete(menuItem);
-        menuItemRepository.deleteById(menuId);
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message(String.format("Menu with id: %d id successfully DELETED", menuId)).build();

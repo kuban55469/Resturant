@@ -6,7 +6,9 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -32,11 +34,11 @@ public class MenuItem {
     private Restaurant restaurant;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {MERGE, REFRESH, DETACH}, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {MERGE, REFRESH, DETACH})
     private SubCategory subCategory;
 
 
-    @OneToOne(mappedBy = "menuItem", cascade = ALL, fetch = FetchType.EAGER, optional = false)
+    @OneToOne(mappedBy = "menuItem", cascade = ALL, fetch = FetchType.EAGER)
     private StopList stopList;
 
     @ManyToMany(mappedBy = "menuItems", cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)

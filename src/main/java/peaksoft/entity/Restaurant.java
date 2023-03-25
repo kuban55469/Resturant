@@ -19,7 +19,6 @@ public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "restaurant_seq")
     @SequenceGenerator(name = "restaurant_seq", allocationSize = 1)
-    @Column(nullable = false)
     private Long id;
     private String name;
     private String location;

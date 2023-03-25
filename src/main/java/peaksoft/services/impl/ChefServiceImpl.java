@@ -118,6 +118,7 @@ public class ChefServiceImpl implements ChefService {
 
         user.setFirstName(cook.firstName());
         user.setLastName(cook.lastName());
+        phoneValid(cook.phoneNumber());
         user.setPhoneNumber(cook.phoneNumber());
         user.setEmail(cook.email());
 

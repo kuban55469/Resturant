@@ -13,10 +13,10 @@ import java.util.List;
  */
 @Builder
 @Data
-
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChequeRequest {
+        private Long waiterId;
         private List<Long> id;
 
 }

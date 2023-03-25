@@ -19,26 +19,21 @@ public class Cheque {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cheque_seq")
     @SequenceGenerator(name = "cheque_seq", allocationSize = 1)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     private BigDecimal priceAverage;
     private LocalDate createdAd;
 
     @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "cheques_menu_items",
             joinColumns = @JoinColumn(name = "cheque_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_items_id"))
-    private List<MenuItem> menuItems ;
+    private List<MenuItem> menuItems = new ArrayList<>();
 
     public void addMenuIterm(MenuItem menuItem) {
-        if (menuItems==null){
-            menuItems=new ArrayList<>();
-        }
         menuItems.add(menuItem);
     }
 }

@@ -17,17 +17,15 @@ public class SubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sub_category_seq")
     @SequenceGenerator(name = "sub_category_seq", allocationSize = 1)
-    @Column(name = "id", nullable = false)
     private Long id;
     private String name;
 
 
     @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
     private Category category;
 
 
-    @OneToMany(mappedBy = "subCategory", cascade = {MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER,orphanRemoval = true)
+    @OneToMany(mappedBy = "subCategory", cascade = {MERGE, REFRESH, DETACH}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<MenuItem> menuItems;
 
     public void addMenuItem(MenuItem menuItem) {

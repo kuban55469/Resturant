@@ -11,6 +11,7 @@ import peaksoft.entity.User;
 import peaksoft.enums.Role;
 import peaksoft.exeption.BadRequestException;
 import peaksoft.exeption.NotFoundException;
+import peaksoft.exeption.PhoneNumberException;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.WaiterService;
@@ -52,7 +53,7 @@ public class WaiterServiceImpl implements WaiterService {
         user.setLastName(waiter.lastName());
         user.setEmail(waiter.email());
         user.setPassword(passwordEncoder.encode(waiter.password()));
-        phoneNumberValid(waiter.phoneNumber());
+        phoneValid(waiter.phoneNumber());
         user.setPhoneNumber(waiter.phoneNumber());
         user.setRole(Role.WAITER);
 
@@ -117,7 +118,7 @@ public class WaiterServiceImpl implements WaiterService {
         user.setLastName(waiter.lastName());
         user.setEmail(waiter.email());
         user.setPassword(waiter.password());
-        phoneNumberValid(waiter.phoneNumber());
+        phoneValid(waiter.phoneNumber());
         user.setPhoneNumber(waiter.phoneNumber());
         user.setRole(Role.WAITER);
         LocalDate now = LocalDate.now();
@@ -164,9 +165,16 @@ public class WaiterServiceImpl implements WaiterService {
                 .build();
     }
 
-    private void phoneNumberValid(String phoneNumber){
-        if (phoneNumber.startsWith("+996") && phoneNumber.length() != 13){
-            throw new BadRequestException("Phone number Invalid");
+    private void phoneValid(String phoneNumber){
+        if (phoneNumber == null || phoneNumber.isEmpty()){
+            throw new NullPointerException("Phone number is null!!");
+        }
+        if (phoneNumber.length() != 13){
+            throw new PhoneNumberException("Номер телефона не должен быть короче 13 цифр!");
+        }
+
+        if (!phoneNumber.startsWith("+996")){
+            throw new PhoneNumberException("Номер телефона должен начаться с +996");
         }
     }
 }

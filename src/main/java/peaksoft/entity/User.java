@@ -26,9 +26,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", allocationSize = 1)
-    @Column(name = "id", nullable = false)
     private Long id;
-
     private String firstName;
     private String lastName;
     private long dateOfBrith;
@@ -43,7 +41,6 @@ public class User implements UserDetails {
 
     private Boolean acceptOrDelete;
     @ManyToOne(cascade = {MERGE, REFRESH, DETACH}, fetch = EAGER)
-    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "user", cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = EAGER)

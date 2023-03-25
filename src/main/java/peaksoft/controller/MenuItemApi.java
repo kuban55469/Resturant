@@ -23,12 +23,12 @@ public class MenuItemApi {
         this.menuItemService = menuItemService;
     }
 
-    @PostMapping("/{restId}/{subCategoryId}")
+    @PostMapping("/{restId}/{subId}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'CHEF')")
     public SimpleResponse saveManu(@PathVariable Long restId,
-                                   @PathVariable Long subCategoryId,
-                                   @RequestBody MenuRequest menuRequest){
-        return menuItemService.saveManu(restId,subCategoryId, menuRequest);
+                                   @RequestBody MenuRequest menuRequest,
+                                   @PathVariable Long subId){
+        return menuItemService.saveManu(restId,subId, menuRequest);
     }
 
     @GetMapping("/findAll/{restId}")

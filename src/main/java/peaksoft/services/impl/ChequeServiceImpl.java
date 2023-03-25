@@ -97,26 +97,27 @@ public class ChequeServiceImpl implements ChequeService {
                 String.format("Cheque with id: %d doesn't exist", chequeId)
         ));
 
-        List<MenuItem> newMenuItems = new ArrayList<>();
-        List<MenuItem> menuItems = menuItemRepository.findAll();
+        List<MenuItem> menuItems = new ArrayList<>();
+
+        cheque.getMenuItems().clear();
 
         for (Long aLong : chequeRequest.getId()) {
-            for (MenuItem menuItem : menuItems) {
-                if (menuItem.getId().equals(aLong)) {
-                    newMenuItems.add(menuItem);
+            MenuItem menuItem = menuItemRepository.findById(aLong).orElseThrow();
+            menuItems.add(menuItem);
+        }
+
+        List<MenuItem> menuItemsList = new ArrayList<>();
+        for (MenuItem menuItem : menuItems) {
+            for (MenuItem item : cheque.getMenuItems()) {
+                if (!item.getId().equals(menuItem.getId())){
+                    MenuItem menuItem1 = menuItemRepository.findById(item.getId()).orElseThrow();
+                    menuItemsList.add(menuItem1);
                 }
             }
-
         }
-
-        for (MenuItem menuItem : cheque.getMenuItems()) {
-            menuItem.getCheques().remove(cheque);
-        }
-
-        for (MenuItem newMenuItem : newMenuItems) {
-            newMenuItem.addCheque(cheque);
-            cheque.addMenuIterm(newMenuItem);
-        }
+        menuItems.addAll(menuItemsList);
+        cheque.setMenuItems(menuItems);
+        chequeRepository.save(cheque);
 
 
         return SimpleResponse.builder().
@@ -136,6 +137,7 @@ public class ChequeServiceImpl implements ChequeService {
         User waiter = userRepository.findById(waiterId).orElseThrow(() -> new NotFoundException(String.format("Waiter with id: %d doesn't exist", waiterId)));
 
         Cheque cheque = chequeRepository.findById(chequeId).orElseThrow();
+
         cheque.getMenuItems().removeAll(cheque.getMenuItems());
         waiter.getCheques().removeIf(c -> c.getId().equals(chequeId));
         chequeRepository.delete(cheque);
