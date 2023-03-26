@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChequeRequest {
-        private Long waiterId;
         private List<Long> id;
 
 }

@@ -1,9 +1,14 @@
 package peaksoft.services.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.WaiterRequest;
+import peaksoft.dto.responses.PaginationResponseWater;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.WaiterResponse;
 import peaksoft.entity.Restaurant;
@@ -163,6 +168,18 @@ public class WaiterServiceImpl implements WaiterService {
                 .status(HttpStatus.OK)
                 .message(String.format("Waiter with id: %d is successfully deleted", waiterId))
                 .build();
+    }
+
+    @Override
+    public PaginationResponseWater getWaiterPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("firstName"));
+        Page<WaiterResponse> pageWaiter = userRepository.getAllByRole(Role.WAITER,pageable);
+
+        PaginationResponseWater paginationResponse = new PaginationResponseWater();
+        paginationResponse.setWaiterResponses(pageWaiter.getContent());
+        paginationResponse.setCurrentPage(pageable.getPageNumber()+1);
+        paginationResponse.setPageSize(pageWaiter.getTotalPages());
+        return paginationResponse;
     }
 
     private void phoneValid(String phoneNumber){

@@ -3,9 +3,7 @@ package peaksoft.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.requests.CategoryRequest;
-import peaksoft.dto.responses.CategoryGroupSubResponse;
-import peaksoft.dto.responses.CategoryResponse;
-import peaksoft.dto.responses.SimpleResponse;
+import peaksoft.dto.responses.*;
 import peaksoft.services.CategoryService;
 
 import java.util.List;
@@ -61,5 +59,11 @@ public class CategoryApi {
     @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryGroupSubResponse group(@PathVariable Long categoryId){
         return categoryService.groupSupCategories(categoryId);
+    }
+
+    @GetMapping("/pagination")
+    public PaginationResponseCategory getCategoryPage(@RequestParam int page,
+                                                      @RequestParam int size){
+        return categoryService.getCategoryPage(page, size);
     }
 }

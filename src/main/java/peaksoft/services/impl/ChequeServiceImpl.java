@@ -1,5 +1,9 @@
 package peaksoft.services.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.ChequeRequest;
@@ -17,6 +21,7 @@ import peaksoft.repositories.MenuItemRepository;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.ChequeService;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -109,7 +114,7 @@ public class ChequeServiceImpl implements ChequeService {
         List<MenuItem> menuItemsList = new ArrayList<>();
         for (MenuItem menuItem : menuItems) {
             for (MenuItem item : cheque.getMenuItems()) {
-                if (!item.getId().equals(menuItem.getId())){
+                if (!item.getId().equals(menuItem.getId())) {
                     MenuItem menuItem1 = menuItemRepository.findById(item.getId()).orElseThrow();
                     menuItemsList.add(menuItem1);
                 }
@@ -207,15 +212,16 @@ public class ChequeServiceImpl implements ChequeService {
         }
         List<BigDecimal> ass = new ArrayList<>();
         for (Cheque cheque : user.getCheques()) {
-                if (cheque.getCreatedAd().equals(request.localDate())) {
-                    ass.add(cheque.getPriceAverage());
-                }
+            if (cheque.getCreatedAd().equals(request.localDate())) {
+                ass.add(cheque.getPriceAverage());
+            }
         }
         return SimpleResponse1.builder()
                 .fullName(user.getFirstName() + " " + user.getLastName())
                 .totalPrice(ass.stream().reduce(BigDecimal.ZERO, BigDecimal::add))
                 .build();
     }
+
 
 
 }

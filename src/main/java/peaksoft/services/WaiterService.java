@@ -1,6 +1,8 @@
 package peaksoft.services;
 
 import peaksoft.dto.requests.WaiterRequest;
+import peaksoft.dto.responses.PaginationResponseChef;
+import peaksoft.dto.responses.PaginationResponseWater;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.WaiterResponse;
 import peaksoft.enums.Role;
@@ -21,4 +23,6 @@ public interface WaiterService {
     SimpleResponse updateWaiter(Long waiterId, WaiterRequest waiter);
 
     SimpleResponse deleteWaiter(Long restId, Long waiterId);
+
+    PaginationResponseWater getWaiterPagination(int page, int size);
 }

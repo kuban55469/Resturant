@@ -1,5 +1,8 @@
 package peaksoft.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import peaksoft.dto.responses.ChefResponse;
@@ -27,7 +30,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<ChefResponse> findByChefId(Long chefId, Role role);
 
 
-
     @Query("select new peaksoft.dto.responses.WaiterResponse(u.id, u.firstName," +
            "u.lastName, u.dateOfBrith, u.email, u.phoneNumber, u.experience)" +
            " from User u where u.restaurant.id=?1 and u.role=?2")
@@ -43,4 +45,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
            "u.dateOfBrith, u.email, u.phoneNumber,u.role, u.experience) from User u where u.restaurant.id=null")
     List<StatementResponse> findAllNewEmployees();
 
+
+
+
+    Page<ChefResponse> findAllByRole(Role role, Pageable pageable);
+    List<ChefResponse> findAllByRole(Role role,Sort sort);
+
+    Page<WaiterResponse> getAllByRole(Role role, Pageable pageable);
+    List<WaiterResponse> getAllByRole(Role role,Sort sort);
 }

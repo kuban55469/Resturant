@@ -3,6 +3,7 @@ package peaksoft.services;
 
 import peaksoft.dto.requests.ChefRequest;
 import peaksoft.dto.responses.ChefResponse;
+import peaksoft.dto.responses.PaginationResponseChef;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.enums.Role;
 
@@ -23,4 +24,5 @@ public interface ChefService {
 
     SimpleResponse deleteChef(Long restId, Long chefId);
 
+    PaginationResponseChef getChefPagination(int page, int size);
 }

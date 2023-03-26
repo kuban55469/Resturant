@@ -3,6 +3,7 @@ package peaksoft.services;
 import peaksoft.dto.requests.CategoryRequest;
 import peaksoft.dto.responses.CategoryGroupSubResponse;
 import peaksoft.dto.responses.CategoryResponse;
+import peaksoft.dto.responses.PaginationResponseCategory;
 import peaksoft.dto.responses.SimpleResponse;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface CategoryService {
     SimpleResponse delete(Long categoryId);
 
     CategoryGroupSubResponse groupSupCategories(Long categoryId);
+
+    PaginationResponseCategory getCategoryPage(int page, int size);
 
 }

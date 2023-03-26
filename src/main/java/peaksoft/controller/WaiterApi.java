@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.requests.WaiterRequest;
+import peaksoft.dto.responses.PaginationResponseChef;
+import peaksoft.dto.responses.PaginationResponseWater;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.WaiterResponse;
 import peaksoft.enums.Role;
@@ -59,5 +61,12 @@ public class WaiterApi {
     public SimpleResponse deleteWaiter(@PathVariable Long restId,
                                        @PathVariable Long waiterId){
         return waiterService.deleteWaiter(restId, waiterId);
+    }
+
+    @GetMapping("/pagination")
+    public PaginationResponseWater getWaiterPage(@RequestParam int page,
+                                                 @RequestParam int size){
+        return waiterService.getWaiterPagination(page, size);
+
     }
 }

@@ -1,5 +1,8 @@
 package peaksoft.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import peaksoft.dto.responses.CategoryGroupSubResponse;
@@ -18,4 +21,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query("select new peaksoft.dto.responses.CategoryGroupSubResponse(c.id, c.name) from Category c where c.id=?1")
     Optional<CategoryGroupSubResponse> findCategory(Long categoryId);
+
+
+    Page<CategoryResponse> findAllBy(Pageable pageable);
+
+    List<CategoryResponse> findAllBy(Sort sort);
 }

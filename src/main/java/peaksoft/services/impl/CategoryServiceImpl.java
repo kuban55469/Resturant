@@ -1,12 +1,13 @@
 package peaksoft.services.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.CategoryRequest;
-import peaksoft.dto.responses.CategoryGroupSubResponse;
-import peaksoft.dto.responses.CategoryResponse;
-import peaksoft.dto.responses.SimpleResponse;
-import peaksoft.dto.responses.SubCategoryResponse;
+import peaksoft.dto.responses.*;
 import peaksoft.entity.Category;
 import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.CategoryRepository;
@@ -92,5 +93,17 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryGroupSubResponse.setSubCategories(subCategoryResponses);
         return categoryGroupSubResponse;
+    }
+
+    @Override
+    public PaginationResponseCategory getCategoryPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("name"));
+        Page<CategoryResponse> categoryPages = categoryRepository.findAllBy(pageable);
+
+        PaginationResponseCategory paginationResponse = new PaginationResponseCategory();
+        paginationResponse.setCategoryResponses(categoryPages.getContent());
+        paginationResponse.setCurrentPage(pageable.getPageNumber()+1);
+        paginationResponse.setPageSize(categoryPages.getTotalPages());
+        return paginationResponse;
     }
 }

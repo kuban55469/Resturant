@@ -2,6 +2,7 @@ package peaksoft.services;
 
 import peaksoft.dto.requests.MenuRequest;
 import peaksoft.dto.responses.ManuResponse;
+import peaksoft.dto.responses.PaginationResponseMenu;
 import peaksoft.dto.responses.SimpleResponse;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface MenuItemService {
     SimpleResponse updateMenu(Long menuId, MenuRequest request);
 
     SimpleResponse deleteManu(Long restId, Long menuId);
+
+    PaginationResponseMenu getMenuPage(Long subId, int page, int size);
 }

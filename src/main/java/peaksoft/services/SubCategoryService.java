@@ -1,6 +1,7 @@
 package peaksoft.services;
 
 import peaksoft.dto.requests.SubCategoryRequest;
+import peaksoft.dto.responses.PaginationResponseSubCategory;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SubCategoryResponse;
 
@@ -20,4 +21,7 @@ public interface SubCategoryService {
     SimpleResponse update(Long subId, SubCategoryRequest request);
 
     SimpleResponse deleteSub(Long categoryId, Long subCategoryId);
+
+    PaginationResponseSubCategory getSubCategoryPage(int page, int size, Long categoryId);
+
 }

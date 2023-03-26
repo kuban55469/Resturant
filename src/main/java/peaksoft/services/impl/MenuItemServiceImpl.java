@@ -1,9 +1,14 @@
 package peaksoft.services.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.MenuRequest;
 import peaksoft.dto.responses.ManuResponse;
+import peaksoft.dto.responses.PaginationResponseMenu;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.entity.MenuItem;
 import peaksoft.entity.Restaurant;
@@ -117,5 +122,17 @@ public class MenuItemServiceImpl implements MenuItemService {
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message(String.format("Menu with id: %d id successfully DELETED", menuId)).build();
+    }
+
+    @Override
+    public PaginationResponseMenu getMenuPage(Long subId, int page, int size) {
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("name"));
+        Page<ManuResponse> allBy = menuItemRepository.findAllBySubCategory_Id(subId, pageable);
+
+        PaginationResponseMenu responseMenu = new PaginationResponseMenu();
+        responseMenu.setManuResponses(allBy.getContent());
+        responseMenu.setCurrentPage(pageable.getPageNumber()+1);
+        responseMenu.setPageSize(allBy.getTotalPages());
+        return responseMenu;
     }
 }

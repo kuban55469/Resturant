@@ -4,6 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.requests.MenuRequest;
 import peaksoft.dto.responses.ManuResponse;
+import peaksoft.dto.responses.PaginationResponseMenu;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.services.MenuItemService;
 
@@ -58,5 +59,12 @@ public class MenuItemApi {
     public SimpleResponse deleteMenu(@PathVariable Long restId,
                                      @PathVariable Long menuId){
         return menuItemService.deleteManu(restId, menuId);
+    }
+
+    @GetMapping("/pagination/{subId}")
+    public PaginationResponseMenu getMenuPage(@RequestParam int page,
+                                              @RequestParam int size,
+                                              @PathVariable Long subId){
+        return menuItemService.getMenuPage(subId, page, size);
     }
 }

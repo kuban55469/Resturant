@@ -1,5 +1,8 @@
 package peaksoft.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import peaksoft.dto.responses.SubCategoryResponse;
@@ -21,7 +24,7 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> 
 
 
 
-//    @Query("delete from SubCategory s where s.id =?1")
-//    void deleteSubCategoryById(Long subCategoryId);
+    Page<SubCategoryResponse> findAllByCategory_Id(Long categoryId, Pageable pageable);
 
+    List<SubCategory> findAllByCategory_Id(Long categoryId, Sort sort);
 }

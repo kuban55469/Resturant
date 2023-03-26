@@ -3,6 +3,8 @@ package peaksoft.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.requests.SubCategoryRequest;
+import peaksoft.dto.responses.PaginationResponseCategory;
+import peaksoft.dto.responses.PaginationResponseSubCategory;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SubCategoryResponse;
 import peaksoft.services.SubCategoryService;
@@ -57,5 +59,12 @@ public class SubCategoryApi {
         return subCategoryService.deleteSub(categoryId, subCategoryId);
     }
 
+
+    @GetMapping("/pagination/{categoryId}")
+    public PaginationResponseSubCategory getSubCategoryPage(@RequestParam int page,
+                                                            @RequestParam int size,
+                                                            @PathVariable Long categoryId){
+        return subCategoryService.getSubCategoryPage(page, size, categoryId);
+    }
 
 }

@@ -54,4 +54,6 @@ public class StopListApi {
     public SimpleResponse delete(@PathVariable Long menuId, @PathVariable Long stopListId){
         return stopListService.delete(menuId, stopListId);
     }
+
+
 }

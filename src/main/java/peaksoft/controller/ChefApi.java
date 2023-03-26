@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.requests.ChefRequest;
 import peaksoft.dto.responses.ChefResponse;
+import peaksoft.dto.responses.PaginationResponseChef;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.enums.Role;
 import peaksoft.services.ChefService;
@@ -57,6 +58,13 @@ public class ChefApi {
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse deleteChef(@PathVariable Long restId, @PathVariable Long chefId){
         return chefService.deleteChef(restId, chefId);
+    }
+
+    @GetMapping("/pagination")
+    public PaginationResponseChef getChefPage(@RequestParam int page,
+                                              @RequestParam int size){
+        return chefService.getChefPagination(page, size);
+
     }
 
 }

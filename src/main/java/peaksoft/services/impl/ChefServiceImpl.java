@@ -1,9 +1,14 @@
 package peaksoft.services.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.ChefRequest;
 import peaksoft.dto.responses.ChefResponse;
+import peaksoft.dto.responses.PaginationResponseChef;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.entity.Restaurant;
 import peaksoft.entity.User;
@@ -14,6 +19,7 @@ import peaksoft.exeption.PhoneNumberException;
 import peaksoft.repositories.RestaurantRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.services.ChefService;
+
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -164,6 +170,18 @@ public class ChefServiceImpl implements ChefService {
                 .message(String.format(
                         "Chef with id: %d successfully deleted",chefId
                 )).build();
+    }
+
+    @Override
+    public PaginationResponseChef getChefPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("firstName"));//
+        Page<ChefResponse> pageChefs = userRepository.findAllByRole(Role.CHEF,pageable);
+
+        PaginationResponseChef paginationResponse = new PaginationResponseChef();
+        paginationResponse.setChefResponses(pageChefs.getContent());
+        paginationResponse.setCurrentPage(pageable.getPageNumber()+1);
+        paginationResponse.setPageSize(pageChefs.getTotalPages());
+        return paginationResponse;
     }
 
     private void phoneValid(String phoneNumber){

@@ -3,25 +3,28 @@ package peaksoft.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import peaksoft.enums.Role;
 
-import java.time.LocalDate;
-import java.time.Year;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.FetchType.*;
+import static jakarta.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
@@ -32,7 +35,7 @@ public class User implements UserDetails {
     private long dateOfBrith;
     @Email
     private String email;
-    @Size(min = 4, message = "Password simbols greater 4")
+    @Size(min = 4, message = "Password symbols greater 4")
     private String password;
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
@@ -86,5 +89,18 @@ public class User implements UserDetails {
             cheques = new ArrayList<>();
         }
         cheques.add(cheque);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return getId() != null && Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
