@@ -1,9 +1,5 @@
 package peaksoft.services.impl;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.ChequeRequest;
@@ -206,20 +202,17 @@ public class ChequeServiceImpl implements ChequeService {
         User user = userRepository.findById(request.id()).
                 orElseThrow(() -> new NotFoundException(String.format("Waiter with id: %d doesn't exist", request.id())));
 
+        List<Cheque> cheques = user.getCheques();
+        List<ChequeResponse> cheques1 = convertList1(cheques);
+        SimpleResponse1 simpleResponse1 = new SimpleResponse1();
+        simpleResponse1.setFullName(user.getFirstName() + " " + user.getLastName());
+        int number = 0;
+        for (ChequeResponse c : cheques1) {
+            number += c.getGrandTotal().intValue();
 
-        if (!user.getRole().equals(Role.WAITER)) {
-            throw new BadRequestException("This employee is not Waiter!!!");
         }
-        List<BigDecimal> ass = new ArrayList<>();
-        for (Cheque cheque : user.getCheques()) {
-            if (cheque.getCreatedAd().equals(request.localDate())) {
-                ass.add(cheque.getPriceAverage());
-            }
-        }
-        return SimpleResponse1.builder()
-                .fullName(user.getFirstName() + " " + user.getLastName())
-                .totalPrice(ass.stream().reduce(BigDecimal.ZERO, BigDecimal::add))
-                .build();
+        simpleResponse1.setTotalPrice(BigDecimal.valueOf(number));
+        return simpleResponse1;
     }
 
 

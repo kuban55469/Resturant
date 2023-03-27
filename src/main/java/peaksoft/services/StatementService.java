@@ -3,8 +3,6 @@ package peaksoft.services;
 import peaksoft.dto.requests.StatementRequest;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.StatementResponse;
-import peaksoft.enums.Role;
-
 import java.util.List;
 
 /**

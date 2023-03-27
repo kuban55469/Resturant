@@ -2,6 +2,7 @@ package peaksoft.services;
 
 import peaksoft.dto.requests.MenuRequest;
 import peaksoft.dto.responses.ManuResponse;
+import peaksoft.dto.responses.MenuItemResponseSearch;
 import peaksoft.dto.responses.PaginationResponseMenu;
 import peaksoft.dto.responses.SimpleResponse;
 
@@ -23,4 +24,7 @@ public interface MenuItemService {
     SimpleResponse deleteManu(Long restId, Long menuId);
 
     PaginationResponseMenu getMenuPage(Long subId, int page, int size);
+
+    List<MenuItemResponseSearch> search(String keyWord);
+
 }

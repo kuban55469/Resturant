@@ -1,6 +1,6 @@
 package peaksoft.dto.responses;
 
-import lombok.Builder;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -9,8 +9,8 @@ import java.math.BigDecimal;
  * @created 21.03.2023
  */
 @Builder
-public record SimpleResponse1(
-        String fullName,
-        BigDecimal totalPrice
-) {
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+public class SimpleResponse1{
+        String fullName;
+        BigDecimal totalPrice;
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.requests.MenuRequest;
 import peaksoft.dto.responses.ManuResponse;
+import peaksoft.dto.responses.MenuItemResponseSearch;
 import peaksoft.dto.responses.PaginationResponseMenu;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.entity.MenuItem;
@@ -134,5 +135,10 @@ public class MenuItemServiceImpl implements MenuItemService {
         responseMenu.setCurrentPage(pageable.getPageNumber()+1);
         responseMenu.setPageSize(allBy.getTotalPages());
         return responseMenu;
+    }
+
+    @Override
+    public List<MenuItemResponseSearch> search(String keyWord) {
+        return menuItemRepository.search(keyWord);
     }
 }

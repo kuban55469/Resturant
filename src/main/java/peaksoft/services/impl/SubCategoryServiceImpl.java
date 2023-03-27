@@ -14,7 +14,6 @@ import peaksoft.entity.Category;
 import peaksoft.entity.SubCategory;
 import peaksoft.exeption.NotFoundException;
 import peaksoft.repositories.CategoryRepository;
-import peaksoft.repositories.MenuItemRepository;
 import peaksoft.repositories.SubCategoryRepository;
 import peaksoft.services.SubCategoryService;
 
@@ -27,15 +26,11 @@ import java.util.List;
 @Service
 public class SubCategoryServiceImpl implements SubCategoryService {
     private final SubCategoryRepository subCategoryRepository;
-
     private final CategoryRepository categoryRepository;
-    private final MenuItemRepository menuItemRepository;
 
-    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, CategoryRepository categoryRepository,
-                                  MenuItemRepository menuItemRepository) {
+    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, CategoryRepository categoryRepository) {
         this.subCategoryRepository = subCategoryRepository;
         this.categoryRepository = categoryRepository;
-        this.menuItemRepository = menuItemRepository;
     }
 
     @Override

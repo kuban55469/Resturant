@@ -2,7 +2,6 @@ package peaksoft.repositories;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import peaksoft.dto.responses.ChefResponse;
@@ -49,8 +48,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     Page<ChefResponse> findAllByRole(Role role, Pageable pageable);
-    List<ChefResponse> findAllByRole(Role role,Sort sort);
 
     Page<WaiterResponse> getAllByRole(Role role, Pageable pageable);
-    List<WaiterResponse> getAllByRole(Role role,Sort sort);
 }

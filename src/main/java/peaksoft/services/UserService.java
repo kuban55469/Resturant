@@ -2,8 +2,6 @@ package peaksoft.services;
 
 import peaksoft.dto.requests.UserInfoRequest;
 
-import peaksoft.dto.requests.WaiterRequest;
-import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.UserInfoResponse;
 
 /**
@@ -13,6 +11,4 @@ import peaksoft.dto.responses.UserInfoResponse;
 
 public interface UserService {
     UserInfoResponse authenticate(UserInfoRequest userInfoRequest);
-
-
 }

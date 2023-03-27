@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import peaksoft.dto.responses.ManuResponse;
+import peaksoft.dto.responses.MenuItemResponseSearch;
 import peaksoft.entity.MenuItem;
 
 import java.util.List;
@@ -23,16 +24,11 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
            " from MenuItem m where m.id=?1")
     Optional<ManuResponse> findByMenuId(Long menuId);
 
-    @Query("select new peaksoft.dto.responses.ManuResponse(m.id, m.name, m.image, m.price, m.description, m.isVegetarian)" +
-           " from MenuItem m")
-    List<ManuResponse> findAllMenusCheque();
-
-    @Query("select new peaksoft.dto.responses.ManuResponse(m.id, m.name, m.image, m.price, m.description, m.isVegetarian)" +
-           " from MenuItem m where m.id=?1")
-    Optional<ManuResponse> findByIdMenuId(Long id);
-
+    @Query("SELECT new peaksoft.dto.responses.MenuItemResponseSearch(c.name,s.name,m.name,m.image,m.price) " +
+           "FROM MenuItem  m join  m.subCategory s join s.category c where " +
+           "(m.name ILIKE %:keyWord% OR c.name ILIKE %:keyWord% OR s.name ILIKE %:keyWord%)")
+    List<MenuItemResponseSearch> search(String keyWord);
 
 
     Page<ManuResponse> findAllBySubCategory_Id(Long subId, Pageable pageable);
-    List<ManuResponse> findAllBySubCategory_Id(Long subId, Sort sort);
 }

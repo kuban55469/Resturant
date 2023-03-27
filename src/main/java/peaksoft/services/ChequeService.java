@@ -3,7 +3,6 @@ package peaksoft.services;
 import peaksoft.dto.requests.ChequeRequest;
 import peaksoft.dto.requests.OneDayAvaragePriceRequest;
 import peaksoft.dto.responses.ChequeResponse;
-import peaksoft.dto.responses.PaginationResponseCheque;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.dto.responses.SimpleResponse1;
 

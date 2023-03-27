@@ -25,5 +25,4 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Page<CategoryResponse> findAllBy(Pageable pageable);
 
-    List<CategoryResponse> findAllBy(Sort sort);
 }

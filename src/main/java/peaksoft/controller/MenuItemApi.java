@@ -4,6 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.requests.MenuRequest;
 import peaksoft.dto.responses.ManuResponse;
+import peaksoft.dto.responses.MenuItemResponseSearch;
 import peaksoft.dto.responses.PaginationResponseMenu;
 import peaksoft.dto.responses.SimpleResponse;
 import peaksoft.services.MenuItemService;
@@ -66,5 +67,10 @@ public class MenuItemApi {
                                               @RequestParam int size,
                                               @PathVariable Long subId){
         return menuItemService.getMenuPage(subId, page, size);
+    }
+
+    @GetMapping("/search")
+    public List<MenuItemResponseSearch> search (@RequestParam String keyWord){
+        return menuItemService.search(keyWord);
     }
 }
